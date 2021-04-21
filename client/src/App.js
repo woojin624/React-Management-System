@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import Customer from './components/Customer';
 import Paper from '@material-ui/core/Paper';
@@ -9,32 +9,19 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 
 function App() {
-  const customers = [
-    {
-      id: 1,
-      image: 'http://placeimg.com/64/64/1',
-      name: '홍길동',
-      birthday: 961222,
-      gender: '남자',
-      job: '대학생',
-    },
-    {
-      id: 2,
-      image: 'http://placeimg.com/64/64/2',
-      name: '김시민',
-      birthday: 791101,
-      gender: '남자',
-      job: '디자이너',
-    },
-    {
-      id: 3,
-      image: 'http://placeimg.com/64/64/3',
-      name: '이순신',
-      birthday: 920924,
-      gender: '남자',
-      job: '프로그래머',
-    },
-  ];
+  const [customers, setCustomers] = useState([]);
+
+  const callApi = async () => {
+    const response = await fetch('/api/customers');
+    const body = await response.json();
+    return body;
+  };
+
+  useEffect(() => {
+    callApi()
+      .then((res) => setCustomers(res))
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <Paper style={{ width: '100%', overflowX: 'auto' }}>
@@ -50,19 +37,21 @@ function App() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {customers.map((customer) => {
-            return (
-              <Customer
-                key={customer.id}
-                id={customer.id} //
-                image={customer.image}
-                name={customer.name}
-                birthday={customer.birthday}
-                gender={customer.gender}
-                job={customer.job}
-              />
-            );
-          })}
+          {customers
+            ? customers.map((customer) => {
+                return (
+                  <Customer
+                    key={customer.id}
+                    id={customer.id} //
+                    image={customer.image}
+                    name={customer.name}
+                    birthday={customer.birthday}
+                    gender={customer.gender}
+                    job={customer.job}
+                  />
+                );
+              })
+            : ''}
         </TableBody>
       </Table>
     </Paper>

@@ -1,10 +1,10 @@
 {
   "name": "management",
   "version": "1.0.0",
-  "script": {
+  "scripts": {
     "client": "cd client && yarn start",
     "server": "nodemon server.js",
-    "dev": "concurrently --kill-other-on-fail \"yarn server\" \"yarn client\""
+    "dev": "concurrently \"npm run server\" \"npm run start --prefix client\""
   },
   "dependencies": {
     "body-parser": "^1.18.3",
